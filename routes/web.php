@@ -8,6 +8,7 @@ Route::middleware('auth')->group(function () {
     Volt::route('/', 'pages.home')->name('home');
     
     Volt::route('/activities', 'activities.index')->name('activities');
+    Volt::route('/foods', 'foods.index')->name('activities');
     
     Route::get('/strava-callback', StravaCallbackController::class)->name('strava-callback');
 });

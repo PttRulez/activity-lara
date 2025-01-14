@@ -1,11 +1,22 @@
 {
-  "Name": "Имя",
+  "Calories per 100 gram": "Калорийность на 100 г",
+  "Proteins per 100 gram": "Белки на 100 г",
+  "Fats per 100 gram": "Жиры на 100 г",
+  "Carbs per 100 gram": " Углеводы на 100 г",
+  "Cancel": "Отмена",
   "Email": "Мыло",
+  "Name": "Имя",
   "Password": "Пароль",
   "Save": "Сохранить",
   "Saved": "Сохранено",
   "Profile Information": "Информация о профиле",
   "Here you can update info about your profile": "Здесь можно обновить инфу о вашем профиле",
   "type your email": "введите своё мыло",
-  "type your password": "введите пароль"
+  "type your password": "введите пароль",
+  "type your name": "введите имя",
+  "type food name": "введите название еды",
+  "type calories per 100g": "введите калорийность на 100 г",
+  "type proteins per 100g": "введите белки на 100 г",
+  "type fats per 100g": "введите жиры на 100 г",
+  "type carbs per 100g": "введите углеводы на 100 г"
 }
