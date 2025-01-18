@@ -15,6 +15,12 @@ new
 #[Layout('layouts.app')]
 #[Title('Activities')]
 class extends Component {
+    public string $stravaOAuthLink;
+
+    public function mount(Strava $strava)
+    {
+       $this->stravaOAuthLink = $strava->getStravaOauthLink();
+    }
     #[Url]
     public $month = null;
 
@@ -69,7 +75,6 @@ class extends Component {
     {
         $allDates = collect();
         $activities = Activity::whereBetween('date', [$this->after, $this->before])->get();
-        Log::debug('$activities count: ' . $activities->count());
 
         for ($this->currentDate = $this->after->copy(); $this->currentDate <= $this->before; $this->currentDate->addDay()) {
             $data = collect([
@@ -104,45 +109,36 @@ class extends Component {
       <span>{{ $this->currentDate->locale('ru')->monthName }}</span>
 
       @if($this->nextButtonLink)
-        <a href="{{ $this->nextButtonLink }}"  wire:navigate>
+        <a href="{{ $this->nextButtonLink }}" wire:navigate>
           <i class='fa-solid fa-arrow-right cursor-pointer'></i>
         </a>
       @endif
     </div>
     <div>
-      <button
-        class='btn btn-primary'
-        wire:click="syncStrava"
-      >
-        Sync Strava
-        <svg
-          class='animate-spin -ml-1 mr-3 h-5 w-5 text-black'
-          xmlns='http://www.w3.org/2000/svg'
-          fill='none'
-          viewBox='0 0 24 24'
-          wire:loading wire:target="syncStrava"
+      @if(auth()->user()->stravaInfo)
+        <button
+          class='btn btn-primary'
+          wire:click="syncStrava"
         >
-          <circle
-            class='opacity-25'
-            cx='12'
-            cy='12'
-            r='10'
-            stroke='currentColor'
-            stroke-width='4'
-          ></circle>
-          <path
-            class='opacity-75'
-            fill='currentColor'
-            d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
-          ></path>
-        </svg>
-      </button>
+          {{ __('Sync Strava') }}
+          <div wire:loading>
+            <x-spinner/>
+          </div>
+        </button>
+      @else()
+        <a
+          href='{{ $stravaOAuthLink }}'
+          class='btn btn-primary'
+        >
+          {{ __('Bind Strava') }}
+        </a>
+      @endif
     </div>
   </div>
   <div class='grid grid-cols-7 gap-4'>
     @foreach($this->days as $key => $day)
-      <livewire:activities.daycard :date="$day->get('date')" :activities="$day->get('activities')"
-                                   wire:key="{{ $key }}"/>
+      <livewire:pages.activities.daycard :date="$day->get('date')" :activities="$day->get('activities')"
+                                         wire:key="{{ $key }}"/>
     @endforeach
   </div>
 </div>

@@ -35,14 +35,12 @@ class extends Component {
 
         Auth::login($user);
 
-        $this->redirect(route('home', absolute: false), navigate: true);
+        $this->redirect(route('diaries', absolute: false), navigate: true);
     }
 }; ?>
 
 
 <div class="flex items-center justify-center h-screen">
-  <x-auth-session-status class="mb-4" :status="session('status')"/>
-
   <div class='max-w-screen-sm w-full bg-base-300 py-10 px-16 rounded-xl'>
     <h1 class='text-center text-primary text-3xl mb-10'>Register</h1>
     <form wire:submit="register" class="space-y-5">

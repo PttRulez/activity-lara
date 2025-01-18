@@ -16,7 +16,8 @@ return new class extends Migration
             $table->date('date');
             $table->integer('steps');
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->timestamps();
+            
+            $table->unique(['date', 'user_id'], 'steps_date_user_unique');
         });
     }
 

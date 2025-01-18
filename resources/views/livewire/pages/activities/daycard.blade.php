@@ -25,9 +25,10 @@ new class extends Component {
         $this->activities = $activities;
     }
 
-    public function getCalories(int $sourceId)
+    public function getCalories(int $sourceId, ?int $calories = null)
     {
-      $this->dispatch('get-calories', $sourceId);
+        if ($calories > 0) return;
+        $this->dispatch('get-calories', $sourceId);
     }
 }; ?>
 
@@ -41,29 +42,36 @@ new class extends Component {
     @elseif(count($activities) === 1)
       <div class='flex'>
         <p>{{ $date->isoFormat("DD.MM") }}</p>
-        <x-sport-icon :calories="$activities[0]->calories" sportType="{{ $activities[0]->sport_type }}"
-                      wire:click="getCalories({{ $activities[0]->source_id }})"/>
+        <x-sport-icon
+          :calories="$activities[0]->calories"
+          sportType="{{ $activities[0]->sport_type }}"
+          wire:click="getCalories({{ $activities[0]->source_id }}, {{ $activities[0]->calories }})"
+        />
       </div>
 
       <h2 class='card-title text-ellipsis whitespace-nowrap overflow-hidden inline-block max-w-full'>
         {{ $activities[0]->name }}
       </h2>
-      <h2>{{ $activities[0]->source_id }}</h2>
       @if($activities[0]->distance > 0)
         <div class='flex justify-between'>
           <span>{{ round($activities[0]->distance / 1000, 2) }} km</span>
           <span>{{ $activities[0]->pace_string }}</span>
         </div>
       @endif
-      <span>{{ $activities[0]->calories ?: 0 }} kcal</span>
+      @isset($activities[0]->calories)
+        <span>{{ $activities[0]->calories . " " .  __('kcal') }}</span>
+      @endisset
 
     @elseif(count($activities) > 1)
       <p>{{ $date->isoFormat("DD.MM") }}</p>
       @foreach($activities as $a)
         <div>
           <div class="flex justify-between">
-            <x-sport-icon calories="{{ $a->calories }}" sportType="{{ $a->sport_type }}"
-              wire:click="getCalories({{ $a->source_id }})"/>
+            <x-sport-icon
+              calories="{{ $a->calories }}"
+              sportType="{{ $a->sport_type }}"
+              wire:click="getCalories({{ $a->source_id }}, {{  $activities[0]->calories }})"
+            />
             <span>{{ $a->calories }} kcal</span>
           </div>
         </div>
@@ -78,3 +86,4 @@ new class extends Component {
 
   </div>
 </div>
+

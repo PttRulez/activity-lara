@@ -16,7 +16,8 @@ return new class extends Migration
             $table->date('date');
             $table->decimal('weight', 4, 1);
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->timestamps();
+            
+            $table->unique(['date', 'user_id'], 'weights_date_user_unique');
         });
     }
 

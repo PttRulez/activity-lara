@@ -13,6 +13,7 @@ use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Log;
@@ -62,6 +63,27 @@ class Strava
         }
     }
     
+    public function oAuth(string $userCode): StravaInfo
+    {
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+            'charset' => 'utf-8'
+        ])->post('https://www.strava.com/oauth/token', [
+            'client_id' => config('app.strava_client_id'),
+            'client_secret' => config('app.strava_client_secret'),
+            'code' => $userCode,
+            'grant_type' => 'authorization_code',
+        ])->collect();
+        
+        return StravaInfo::updateOrCreate(
+            ['user_id' => Auth::id()],
+            [
+                'access_token' => $response->get('access_token'),
+                'refresh_token' => $response->get('refresh_token'),
+            ]
+        );
+    }
+    
     public function syncStrava(): void
     {
         set_time_limit(0);
@@ -72,6 +94,8 @@ class Strava
         if ($latestUnix > 0) {
             $after = $latestUnix;
         }
+        
+        $bulk = [];
         
         while ($isPolling) {
             try {
@@ -88,15 +112,13 @@ class Strava
                     break;
                 }
                 
-                $activities->each(function (Activity $activity) {
-                    $activity->save();
-                });
-                
                 $after = $activities->max('start_time_unix');
+                $bulk = array_merge($bulk, $activities->toArray());
             } catch (\Exception $e) {
                 Log::error('Failed to fetch activities from Strava: ' . $e->getMessage());
             }
         }
+        Activity::insert($bulk);
     }
     
     /**
@@ -105,16 +127,16 @@ class Strava
     private function calculatePace(int $movingTime, int $distance): array
     {
         if ($distance <= 0) {
-            return ['pace' => 0, 'pace_string' => ''];
+            return ['pace' => null, 'pace_string' => null];
         }
         $km = $distance / 1000;
         $secondsPerKm = $movingTime / $km;
-        $minutes = round($secondsPerKm / 60);
+        $minutes = floor($secondsPerKm / 60);
         $seconds = str_pad($secondsPerKm % 60, 2, '0', STR_PAD_LEFT);
         $paceString = "{$minutes}:{$seconds}";
         
         return [
-            'pace' => $secondsPerKm,
+            'pace' => (int)$secondsPerKm,
             'pace_string' => $paceString,
         ];
     }
@@ -135,27 +157,23 @@ class Strava
         $paceData = $this->calculatePace($row['moving_time'], $row['distance']);
         
         $a = new Activity([
-            'calories' => 0,
+            'calories' => null,
             'distance' => round($row['distance']),
-            'description' => '',
+            'description' => null,
             'date' => Carbon::parse($row['start_date_local']),
             'elevate' => round($row['total_elevation_gain']),
-            'heart_rate' => 0,
+            'heart_rate' => $row['has_heartrate'] ? round($row['average_heartrate']) : null,
             'name' => $row['name'],
             'pace' => $paceData['pace'],
             'pace_string' => $paceData['pace_string'],
             'source' => Source::STRAVA->value,
             'source_id' => $row['id'],
-            'sport_type' => $this->sportType($row['type']),
+            'sport_type' => $this->sportType($row['type'])->value,
             'start_time_unix' => Carbon::parse($row['start_date'])->getTimestamp(),
             'total_time' => $row['elapsed_time'],
             'user_id' => Auth::id(),
             'hui' => 22
         ]);
-        
-        if ($row['has_heartrate']) {
-            $a->heart_rate = round($row['average_heartrate']);
-        }
         
         return $a;
     }

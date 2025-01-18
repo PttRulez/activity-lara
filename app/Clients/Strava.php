@@ -93,27 +93,5 @@ class Strava
         }
     }
     
-    /**
-     * @throws ConnectionException
-     */
-    public function oAuth(string $userCode): StravaInfo
-    {
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/json',
-            'charset' => 'utf-8'
-        ])->post('https://www.strava.com/oauth/token', [
-            'client_id' => config('app.strava_client_id'),
-            'client_secret' => config('app.strava_client_secret'),
-            'code' => $userCode,
-            'grant_type' => 'authorization_code',
-        ])->collect();
-        
-        return StravaInfo::updateOrCreate(
-            ['user_id' => Auth::id()],
-            [
-                'access_token' => $response->get('access_token'),
-                'refresh_token' => $response->get('refresh_token'),
-            ]
-        );
-    }
+    
 }

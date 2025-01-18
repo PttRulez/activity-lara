@@ -176,6 +176,7 @@ return [
         'attribute-name' => [
             'rule-name' => 'custom-message',
         ],
+        'foods.required' => 'You need at least one :attribute.',
     ],
 
     /*
@@ -189,6 +190,8 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'foods' => 'food'
+    ],
 
 ];

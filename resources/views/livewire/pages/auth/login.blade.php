@@ -23,43 +23,24 @@ class extends Component {
 
         Session::regenerate();
 
-        session()->put('strava_info', [
-            'access_token' => 'abcghf',
-        ]);
-
-        $this->redirectIntended(default: route('home', absolute: false), navigate: true);
+      $this->redirectIntended(default: route('diaries', absolute: false), navigate: true);
     }
 }; ?>
 
 <div class="flex items-center justify-center h-screen">
-  <x-auth-session-status class="mb-4" :status="session('status')"/>
-
   <div class='max-w-screen-sm w-full bg-base-300 py-10 px-16 rounded-xl'>
     <h1 class='text-center text-primary text-3xl mb-10'>Login</h1>
     <form wire:submit="login" class="space-y-5">
-{{--      <label class='form-control w-full'>--}}
-{{--        <div class='label'>--}}
-{{--          <span class='label-text'>Email</span>--}}
-{{--        </div>--}}
-{{--        <input--}}
-{{--          wire:model="form.email"--}}
-{{--          type='email'--}}
-{{--          placeholder='type your email'--}}
-{{--          class='input input-bordered w-full'--}}
-{{--          autoComplete='off'--}}
-{{--          required--}}
-{{--        />--}}
-{{--        <x-input-error :messages="$errors->get('form.email')" class="mt-2"/>--}}
-{{--    </label>--}}
-
       <x-input-field
         wire:model="form.email"
+        :errorMessages="$errors->get('form.email')"
         label="{{ __('Email') }}"
         placeholder="{{ __('type your email') }}"
       />
 
       <x-input-field
         wire:model="form.password"
+        :errorMessages="$errors->get('form.password')"
         type="password"
         label="{{ __('Password') }}"
         placeholder="{{ __('type your password') }}"

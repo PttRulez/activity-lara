@@ -2,9 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class StravaInfo extends Model
+class StravaInfo extends BaseModel
 {
-    protected $guarded = ['id'];
 }

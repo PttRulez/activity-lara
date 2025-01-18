@@ -3,13 +3,8 @@
 namespace App\Models;
 
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 
-class Activity extends Model
+class Activity extends BaseModel
 {
     public Carbon $startTime;
-    
-    protected $guarded = ['id'];
-    protected $casts = ['date' => 'date'];
-    
 }

@@ -14,6 +14,8 @@ class StravaCallbackController extends Controller
     
         $strava->oAuth($userCode);
         
-        return redirect()->route('home');
+        auth()->user()->load('stravaInfo');
+        
+        return redirect()->route('activities');
     }
 }

@@ -1,14 +1,14 @@
 @use('App\Enums\SportType')
 
 @props([
-    'calories' => 0,
+    'calories' => null,
     'sportType' => SportType::OTHER->value
 ])
 
 <div @class([
   "badge badge-outline" => true,
-    "hover:-translate-y-0.5 badge-secondary hover:scale-125 transform cursor-pointer" => $calories == 0,
-    "badge-primary" => $calories > 0
+    "hover:-translate-y-0.5 badge-secondary hover:scale-125 transform cursor-pointer" => is_null($calories),
+    "badge-primary" => isset($calories)
 ])
 {{ $attributes }}
 >

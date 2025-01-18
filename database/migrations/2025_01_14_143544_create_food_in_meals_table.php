@@ -18,7 +18,6 @@ return new class extends Migration
             $table->foreignId('meal_id')->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->integer('weight');
-            $table->timestamps();
         });
     }
 

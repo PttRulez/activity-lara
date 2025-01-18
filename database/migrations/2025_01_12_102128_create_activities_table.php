@@ -13,7 +13,7 @@ return new class extends Migration {
     {
         Schema::create('activities', function (Blueprint $table) {
             $table->id();
-            $table->integer('calories');
+            $table->integer('calories')->nullable();
             $table->text('description')->nullable();
             $table->integer('distance');
             $table->date('date');
@@ -24,11 +24,10 @@ return new class extends Migration {
             $table->string('pace_string')->nullable();
             $table->string('source');
             $table->unsignedBigInteger('source_id')->unique();
-            $table->integer('sport_type');
+            $table->string('sport_type');
             $table->unsignedBigInteger('start_time_unix');
             $table->integer('total_time');
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->timestamps();
         });
     }
     

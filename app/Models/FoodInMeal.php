@@ -2,9 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-
-class FoodInMeal extends Model
+class FoodInMeal extends BaseModel
 {
-    //
 }
