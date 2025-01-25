@@ -6,7 +6,7 @@ use App\Http\Controllers\StravaCallbackController;
 use App\Http\Controllers\DiariesController;
 
 Route::middleware('auth')->group(function () {
-    Volt::route('/', 'pages.diaries.index')->name('diaries');
+    Route::get('/', DiariesController::class)->name('diaries');
     
     Volt::route('/activities', 'pages.activities.index')->name('activities');
     Volt::route('/foods', 'pages.foods.index')->name('foods');

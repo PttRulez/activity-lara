@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Boroda</h1>
+</body>
+</html>
+
+<VirtualHost *:80>
+    ServerAdmin webmaster@ucarehospice.com
+    ServerName ucarehospice.com
+    ServerAlias www.ucarehospice.com
+    DocumentRoot /var/www/ucarehospice.com/public
+
+    <Directory /var/www/ucarehospice.com>
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>

@@ -80,6 +80,6 @@ class Diary
             }
         }
         
-        return $weeks;
+        return array_reverse($weeks);
     }
 }
