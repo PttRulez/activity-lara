@@ -12,7 +12,12 @@ class StravaCallbackController extends Controller
     {
         $userCode = $request->query('code');
     
-        $strava->oAuth($userCode);
+        $success = $strava->oAuth($userCode);
+        
+        if (!$success) {
+            session()->flash('toast', 'Failed to authorize with Strava');
+            return redirect()->route('activities');
+        }
         
         auth()->user()->load('stravaInfo');
         

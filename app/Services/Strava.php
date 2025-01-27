@@ -63,7 +63,7 @@ class Strava
         }
     }
     
-    public function oAuth(string $userCode): StravaInfo
+    public function oAuth(string $userCode): StravaInfo | null
     {
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
@@ -73,7 +73,15 @@ class Strava
             'client_secret' => config('app.strava_client_secret'),
             'code' => $userCode,
             'grant_type' => 'authorization_code',
-        ])->collect();
+        ]);
+        if ($response->failed()) {
+            dd($response->effectiveUri(), $response->body());
+            Log::error('Failed to authorize with Strava: '. $response->effectiveUri());
+            Log::error('Failed to authorize with Strava: '. $response->body());
+            return null;
+        }
+        
+        $response =$response->collect();
         
         return StravaInfo::updateOrCreate(
             ['user_id' => Auth::id()],

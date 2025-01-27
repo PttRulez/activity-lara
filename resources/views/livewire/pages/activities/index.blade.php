@@ -74,9 +74,12 @@ class extends Component {
     public function days(): Collection
     {
         $allDates = collect();
-        $activities = Activity::whereBetween('date', [$this->after, $this->before])->get();
+        $activities = auth()->user()->activities()->whereBetween('date', [$this->after, $this->before])->get();
 
-        for ($this->currentDate = $this->after->copy(); $this->currentDate <= $this->before; $this->currentDate->addDay()) {
+        for ($this->currentDate = $this->after->copy();
+             $this->currentDate <= $this->before;
+             $this->currentDate->addDay()
+        ) {
             $data = collect([
                 'date' => $this->currentDate->copy(),
                 'activities' => $activities->filter(fn($a) => $this->currentDate->isSameDay($a->date))->values(),

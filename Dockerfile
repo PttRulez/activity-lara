@@ -1,7 +1,5 @@
-# Start from the PHP 8.4 FPM base image
 FROM php:8.4-fpm
 
-# Install system dependencies (e.g., for Composer, npm, PostgreSQL extensions)
 RUN apt-get update && apt-get install -y \
     curl \
     git \
@@ -14,17 +12,21 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Composer globally
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Install PHP extensions: pdo_pgsql and pgsql
 RUN docker-php-ext-install pdo pdo_pgsql pgsql
 
-# Set the working directory inside the container
 WORKDIR /var/www/html
 
-# Expose the necessary port
+COPY . .
+
+RUN composer install --no-dev --optimize-autoloader
+
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
+RUN php artisan storage:link
+
 EXPOSE 9000
 
-# Start PHP-FPM service
 CMD ["php-fpm"]

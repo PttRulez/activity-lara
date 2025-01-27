@@ -11,7 +11,7 @@ new class extends Component {
 
     public function mount(): void
     {
-        $this->days = auth()->user()->meals()->with('foods')->get()->groupBy('date')
+        $this->days = auth()->user()->meals()->with('foods')->orderByDesc('date')->get()->groupBy('date')
             ->map(function ($groupedMeals, $date) {
                 return [
                     'date' => \Carbon\Carbon::parse($date),
@@ -82,7 +82,7 @@ new class extends Component {
   </section>
 
   <dialog class="modal" open x-show="mealModalOpen">
-    <div class="modal-box overflow-visible" @click.outside="mealModalOpen = false">
+    <div class="modal-box overflow-auto lg:overflow-visible" @click.outside="mealModalOpen = false">
       <livewire:pages.foods.meal-form/>
     </div>
   </dialog>

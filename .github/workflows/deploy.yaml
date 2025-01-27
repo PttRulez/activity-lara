@@ -1,0 +1,74 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      REMOTE_DIR: /home/activity-lara
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: |
+          npm install  # Install npm dependencies
+
+      - name: Build assets
+        run: |
+          npm run build  # Build your CSS, JS, and other assets
+
+      - name: Create .env file from GitHub Secrets
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env.docker
+
+      - name: Build Docker Compose images
+        run: docker compose -f docker-compose.yml build
+
+      - name: Pull official images (nginx, postgres, redis)
+        run: |
+          docker pull nginx:latest
+          docker pull postgres:13
+          docker pull redis:alpine
+
+      - name: Save Docker Compose images as tar files
+        run: |
+          docker save -o activity-image.tar activity-image:latest
+
+      - name: Create Remote Directory and Transfer Files
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+          #   Create directory of our project if it doesn't exist
+          ssh -o StrictHostKeyChecking=no ${{ secrets.ACTIVITY_SERVER_USER }}@${{ secrets.ACTIVITY_SERVER_IP }} "mkdir -p $REMOTE_DIR"
+          
+          #   Transfer docker images, docker-compose.yml nginx.conf files
+          scp -o StrictHostKeyChecking=no activity-image.tar docker-compose.yml nginx.conf ${{ secrets.ACTIVITY_SERVER_USER }}@${{ secrets.ACTIVITY_SERVER_IP }}:$REMOTE_DIR
+          
+          #   Transfer build files (JS and CSS, favicon, vite manifest)
+          scp -o StrictHostKeyChecking=no -r ./public/build/* ${{ secrets.ACTIVITY_SERVER_USER }}@${{ secrets.ACTIVITY_SERVER_IP }}:$REMOTE_DIR/build/
+
+      - name: Load Docker images on remote server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.ACTIVITY_SERVER_USER }}@${{ secrets.ACTIVITY_SERVER_IP }} << ENDSSH
+            docker load -i $REMOTE_DIR/activity-image.tar
+          ENDSSH
+
+      - name: Deploy Docker containers using Docker Compose on remote server
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.ACTIVITY_SERVER_USER }}@${{ secrets.ACTIVITY_SERVER_IP }} << ENDSSH
+            cd $REMOTE_DIR
+            docker compose up -d
+          ENDSSH
