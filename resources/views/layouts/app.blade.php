@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="halloween">
+<html lang="en" data-theme="halloween" class="overflow-auto">
 <head>
 <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,7 +7,7 @@
   @vite(['resources/css/app.css', 'resources/js/app.js'])
   <link rel="icon" href="{{ Vite::asset('resources/static/favicon.ico') }}" type="image/x-icon"/>
 </head>
-<body>
+<body class="pb-10">
 <div class="container mx-auto">
 
   <livewire:components.navigation/>

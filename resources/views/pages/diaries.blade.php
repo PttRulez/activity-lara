@@ -29,16 +29,18 @@
                 @if($index > 0)
                   <hr class='grow'/>
                 @endif
-                <div
-                  @class([
-                    "tooltip timeline-start border-2  rounded p-2" => true,
-                    "border-green-500" => $day['caloriesBalance'] <= 0,
-                    "border-red-500" => $day['caloriesBalance'] > 0,
-                  ])
-                  data-tip="{{$day['caloriesConsumed']}} - {{ auth()->user()->bmr }} - {{$day['caloriesBurnedInActivities']}} - {{$day['caloriesBurnedBySteps']}} ({{$day['steps']}})"
-                >
-                  {{ $day['caloriesBalance'] }}
-                </div>
+                @if($day['caloriesConsumed'] > 0)
+                  <div
+                    @class([
+                      "tooltip timeline-start border-2  rounded p-2" => true,
+                      "border-green-500" => $day['caloriesBalance'] <= 0,
+                      "border-red-500" => $day['caloriesBalance'] > 0,
+                    ])
+                    data-tip="{{$day['caloriesConsumed']}} - {{ auth()->user()->bmr }} - {{$day['caloriesBurnedInActivities']}} - {{$day['caloriesBurnedBySteps']}} ({{$day['steps']}})"
+                  >
+                    {{ $day['caloriesBalance'] }}
+                  </div>
+                @endif
                 <div class='timeline-middle tooltip' data-tip={{ $day['date'] }}>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
