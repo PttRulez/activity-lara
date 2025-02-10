@@ -81,13 +81,13 @@ new class extends Component {
     @endforeach
   </section>
 
-  <dialog class="modal" open x-show="mealModalOpen">
+  <dialog class="modal" :open="mealModalOpen" x-show="mealModalOpen">
     <div class="modal-box overflow-auto lg:overflow-visible" @click.outside="mealModalOpen = false">
       <livewire:pages.foods.meal-form/>
     </div>
   </dialog>
 
-  <dialog class="modal" open x-show="foodModalOpen" >
+  <dialog class="modal" :open="mealModalOpen" x-show="foodModalOpen" >
     <div class="modal-box"  @click.outside="foodModalOpen = false">
       <livewire:pages.foods.food-form/>
     </div>
