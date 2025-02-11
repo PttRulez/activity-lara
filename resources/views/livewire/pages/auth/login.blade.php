@@ -6,10 +6,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Volt\Component;
 
-new
-#[Layout('layouts.guest')]
-#[Title('Login')]
-class extends Component {
+new #[Layout('layouts.guest')] #[Title('Login')] class extends Component {
     public LoginForm $form;
 
     /**
@@ -23,53 +20,32 @@ class extends Component {
 
         Session::regenerate();
 
-      $this->redirectIntended(default: route('diaries', absolute: false), navigate: true);
+        $this->redirectIntended(default: route('diaries', absolute: false), navigate: true);
     }
 }; ?>
 
 <div class="flex items-center justify-center h-screen">
   <div class='max-w-screen-sm w-full bg-base-300 py-10 px-16 rounded-xl'>
-    <h1 class='text-center text-primary text-3xl mb-10'>Login</h1>
+    <h1 class='text-center text-primary text-3xl mb-10'>{{ __('auth.Login') }}</h1>
     <form wire:submit="login" class="space-y-5">
-      <x-input-field
-        wire:model="form.email"
-        :errorMessages="$errors->get('form.email')"
-        label="{{ __('Email') }}"
-        placeholder="{{ __('type your email') }}"
-      />
-
-      <x-input-field
-        wire:model="form.password"
-        :errorMessages="$errors->get('form.password')"
-        type="password"
-        label="{{ __('Password') }}"
-        placeholder="{{ __('type your password') }}"
-      />
-
-      <!-- Remember Me -->
-      <div class="block mt-4">
-        <label for="remember" class="inline-flex items-center">
-          <input wire:model="form.remember" id="remember" type="checkbox"
-                 class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-          <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-        </label>
-      </div>
+      <x-input wire:model="form.email" placeholder="{{ __('auth.type your email') }}" />
+      <x-password wire:model="form.password" placeholder="{{ __('auth.type your password') }}" />
+      <x-checkbox label="{{ __('auth.Remember me') }}" wire:model="form.remember" />
 
       <!-- Buttons -->
       <button type='submit' class='btn btn-primary w-full'>
-        login <i class='fa-solid fa-arrow-right'></i>
+        {{ __('auth.login') }} <i class='fa-solid fa-arrow-right'></i>
       </button>
-      <div class='divider'>OR</div>
+      <div class='divider'>{{ __('OR') }}</div>
       <a href='/register' class='btn btn-outline w-full'>
-        {{  __('Register') }}
+        {{ __('auth.Register') }}
       </a>
 
       <div class="flex items-center justify-end mt-4 gap-3">
         @if (Route::has('password.request'))
-          <a
-            class="underline text-sm text-gray-600 hover:text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          <a class="underline text-sm text-gray-600 hover:text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             href="{{ route('password.request') }}" wire:navigate>
-            {{ __('Forgot your password?') }}
+            {{ __('auth.Forgot your password?') }}
           </a>
         @endif
       </div>

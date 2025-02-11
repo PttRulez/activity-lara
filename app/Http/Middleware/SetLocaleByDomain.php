@@ -18,7 +18,7 @@ class SetLocaleByDomain
     {
         $host = $request->getHost();
 
-        if ($request->getHost() === 'activitypeople.ru') {
+        if ($request->getHost() === 'activitypeople-laravel.test') {
             App::setLocale('ru');
         }
 

@@ -12,8 +12,15 @@ return [
     | these language lines according to your application's requirements.
     |
     */
-    'failed' => 'These credentials do not match our records.',
-    'password' => 'The provided password is incorrect.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-    'register' => 'Зарегистрироваться'
+    'failed' => 'Неверные логин/пароль',
+    'Forgot your password?' => 'Забыли пароль?',
+    'login' => 'залогиниться',
+    'Login' => 'Логин',
+    'register' => 'зарегистрироваться',
+    'Register' => 'Регистрация',
+    'Remember me' => 'Запомнить меня',
+    'throttle' => 'Слишком много попыток. Попробуйте через :seconds секунд.',
+    'type your email' => 'введите своё мыло',
+    'type your password' => 'введите пароль',
+    'type your name' => 'введите имя / ник',
 ];
