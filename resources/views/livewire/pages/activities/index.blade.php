@@ -1,17 +1,13 @@
 <?php
 
 use Livewire\Volt\Component;
-use Livewire\Attributes\Title;
 use App\Services\Strava;
-use Livewire\Attributes\Layout;
-use Illuminate\Support\Collection;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Livewire\Attributes\{Computed, On};
-use App\Models\Activity;
-use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Url;
 
-new #[Layout('layouts.app')] #[Title('Activities')] class extends Component {
+new #[Title('Activities')] class extends Component {
     public string $stravaOAuthLink;
 
     public function mount(Strava $strava)
@@ -103,7 +99,7 @@ new #[Layout('layouts.app')] #[Title('Activities')] class extends Component {
 
 <div>
 
-  <div class='p-4 text-3xl flex justify-between'>
+  <div class='p-4 text-3xl flex max-md:flex-col-reverse max-md:gap-5 items-center justify-between'>
     <div class='min-w-56 flex justify-between'>
       <a href="{{ $this->prevButtonLink }}" wire:navigate>
         <i class='fa-solid fa-arrow-left cursor-pointer w-8 h-8'></i>
@@ -118,15 +114,9 @@ new #[Layout('layouts.app')] #[Title('Activities')] class extends Component {
     </div>
     <div>
       @if (auth()->user()->stravaInfo)
-        <button class='btn btn-primary min-w-8' wire:click="syncStrava">
+        <x-button class='btn-primary' wire:click="syncStrava" spinner="syncStrava">
           {{ __('Sync Strava') }}
-          {{-- <div wire:loading> --}}
-          <span class="loading loading-spinner invisible" wire:loading.class.remove="invisible"></span>
-          {{-- </div> --}}
-          {{-- <div wire:loading>
-            <x-spinner/>
-          </div> --}}
-        </button>
+        </x-button>
       @else()
         <a href='{{ $stravaOAuthLink }}' class='btn btn-primary'>
           {{ __('Bind Strava') }}
@@ -134,9 +124,19 @@ new #[Layout('layouts.app')] #[Title('Activities')] class extends Component {
       @endif
     </div>
   </div>
-  <div class='grid grid-cols-7 gap-4'>
+  {{-- Desktop version --}}
+  <div class='grid grid-cols-7 gap-4 max-md:hidden'>
     @foreach ($this->days as $key => $day)
       <livewire:pages.activities.daycard :date="$day->get('date')" :activities="$day->get('activities')" wire:key="{{ $key }}" />
     @endforeach
   </div>
+  {{-- End Desktop version --}}
+
+  {{-- Mobile version --}}
+  <div class='flex flex-col-reverse gap-5 md:hidden'>
+    @foreach ($this->days as $key => $day)
+      <livewire:pages.activities.daycard :date="$day->get('date')" :activities="$day->get('activities')" wire:key="{{ $key }}" />
+    @endforeach
+  </div>
+  {{-- End Mobile version --}}
 </div>

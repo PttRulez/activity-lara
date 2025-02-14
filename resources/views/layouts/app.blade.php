@@ -9,16 +9,17 @@
     <link rel="icon" href="{{ Vite::asset('resources/static/favicon.ico') }}" type="image/x-icon" />
   </head>
 
-  <body class="pb-10">
-    <div class="container mx-auto">
+  <body class="pb-10 container mx-auto">
+    <livewire:components.navigation />
 
-      <livewire:components.navigation />
+    <div class="divider m-0"></div>
+
+    <main class="max-md:px-4">
 
       {{ $slot }}
 
       <x-toaster />
-
-    </div>
+    </main>
   </body>
 
 </html>
