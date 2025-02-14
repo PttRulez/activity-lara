@@ -104,7 +104,7 @@ new #[Title('Activities')] class extends Component {
       <a href="{{ $this->prevButtonLink }}" wire:navigate>
         <i class='fa-solid fa-arrow-left cursor-pointer w-8 h-8'></i>
       </a>
-      <span>{{ $this->currentDate->locale('ru')->monthName }}</span>
+      <span>{{ $this->currentDate->monthName }}</span>
 
       @if ($this->nextButtonLink)
         <a href="{{ $this->nextButtonLink }}" wire:navigate>

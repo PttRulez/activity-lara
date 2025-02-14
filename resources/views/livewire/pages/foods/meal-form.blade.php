@@ -110,7 +110,6 @@ new class extends Component {
         x-on:food-chosen="handleFoodChosen($event, {{ $loop->index }})"
         x-on:food-name-input="handleFoodNameInput($event, {{ $loop->index }})">
         <livewire:components.food-search :key="'food-search' . $loop->index" />
-
         <input type='number' placeholder='0 г' class='input input-bordered w-full hide-number-arrows'
           wire:model.number="foods.{{ $loop->index }}.weight" @keyup="handleFoodDataChanged({{ $loop->index }})" />
         <input type='number' class='input input-bordered w-full'
