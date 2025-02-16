@@ -13,8 +13,17 @@ return [
     |
     */
 
+    'confirm_password' => 'confirm your password',
     'failed' => 'These credentials do not match our records.',
+    'Forgot your password?' => 'Forgot your password?',
+    'login' => 'login',
+    'Login' => 'Login',
     'password' => 'The provided password is incorrect.',
+    'Remember me' => 'Remember me',
+    'register' => 'register',
+    'Register' => 'Register',
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-    'register' => 'Registration'
+    'type your email' => 'type your email',
+    'type your password' => 'type your password',
+    'type your name' => 'type your name',
 ];

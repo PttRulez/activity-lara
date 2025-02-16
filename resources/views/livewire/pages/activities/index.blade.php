@@ -1,25 +1,18 @@
 <?php
 
 use Livewire\Volt\Component;
-use Livewire\Attributes\Title;
 use App\Services\Strava;
-use Livewire\Attributes\Layout;
-use Illuminate\Support\Collection;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 use Livewire\Attributes\{Computed, On};
-use App\Models\Activity;
-use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Url;
 
-new
-#[Layout('layouts.app')]
-#[Title('Activities')]
-class extends Component {
+new #[Title('Activities')] class extends Component {
     public string $stravaOAuthLink;
 
     public function mount(Strava $strava)
     {
-       $this->stravaOAuthLink = $strava->getStravaOauthLink();
+        $this->stravaOAuthLink = $strava->getStravaOauthLink();
     }
     #[Url]
     public $month = null;
@@ -41,7 +34,8 @@ class extends Component {
     public function prevButtonLink(): string
     {
         return route('activities', [
-            'month' => $this->currentDate->copy()->subMonth()->month, 'year' => $this->currentDate->copy()->subMonth()->year,
+            'month' => $this->currentDate->copy()->subMonth()->month,
+            'year' => $this->currentDate->copy()->subMonth()->year,
         ]);
     }
 
@@ -52,11 +46,11 @@ class extends Component {
             return null;
         } else {
             return route('activities', [
-                'month' => $this->currentDate->copy()->addMonth()->month, 'year' => $this->currentDate->copy()->addMonth()->year,
+                'month' => $this->currentDate->copy()->addMonth()->month,
+                'year' => $this->currentDate->copy()->addMonth()->year,
             ]);
         }
     }
-
 
     #[Computed]
     public function after()
@@ -74,12 +68,13 @@ class extends Component {
     public function days(): Collection
     {
         $allDates = collect();
-        $activities = auth()->user()->activities()->whereBetween('date', [$this->after, $this->before])->get();
+        $activities = auth()
+            ->user()
+            ->activities()
+            ->whereBetween('date', [$this->after, $this->before])
+            ->get();
 
-        for ($this->currentDate = $this->after->copy();
-             $this->currentDate <= $this->before;
-             $this->currentDate->addDay()
-        ) {
+        for ($this->currentDate = $this->after->copy(); $this->currentDate <= $this->before; $this->currentDate->addDay()) {
             $data = collect([
                 'date' => $this->currentDate->copy(),
                 'activities' => $activities->filter(fn($a) => $this->currentDate->isSameDay($a->date))->values(),
@@ -104,44 +99,44 @@ class extends Component {
 
 <div>
 
-  <div class='p-4 text-3xl flex justify-between'>
+  <div class='p-4 text-3xl flex max-md:flex-col-reverse max-md:gap-5 items-center justify-between'>
     <div class='min-w-56 flex justify-between'>
       <a href="{{ $this->prevButtonLink }}" wire:navigate>
         <i class='fa-solid fa-arrow-left cursor-pointer w-8 h-8'></i>
       </a>
-      <span>{{ $this->currentDate->locale('ru')->monthName }}</span>
+      <span>{{ $this->currentDate->monthName }}</span>
 
-      @if($this->nextButtonLink)
+      @if ($this->nextButtonLink)
         <a href="{{ $this->nextButtonLink }}" wire:navigate>
           <i class='fa-solid fa-arrow-right cursor-pointer'></i>
         </a>
       @endif
     </div>
     <div>
-      @if(auth()->user()->stravaInfo)
-        <button
-          class='btn btn-primary'
-          wire:click="syncStrava"
-        >
+      @if (auth()->user()->stravaInfo)
+        <x-button class='btn-primary' wire:click="syncStrava" spinner="syncStrava">
           {{ __('Sync Strava') }}
-          <div wire:loading>
-            <x-spinner/>
-          </div>
-        </button>
+        </x-button>
       @else()
-        <a
-          href='{{ $stravaOAuthLink }}'
-          class='btn btn-primary'
-        >
+        <a href='{{ $stravaOAuthLink }}' class='btn btn-primary'>
           {{ __('Bind Strava') }}
         </a>
       @endif
     </div>
   </div>
-  <div class='grid grid-cols-7 gap-4'>
-    @foreach($this->days as $key => $day)
-      <livewire:pages.activities.daycard :date="$day->get('date')" :activities="$day->get('activities')"
-                                         wire:key="{{ $key }}"/>
+  {{-- Desktop version --}}
+  <div class='grid grid-cols-7 gap-4 max-md:hidden'>
+    @foreach ($this->days as $key => $day)
+      <livewire:pages.activities.daycard :date="$day->get('date')" :activities="$day->get('activities')" wire:key="{{ $key }}" />
     @endforeach
   </div>
+  {{-- End Desktop version --}}
+
+  {{-- Mobile version --}}
+  <div class='flex flex-col-reverse gap-5 md:hidden'>
+    @foreach ($this->days as $key => $day)
+      <livewire:pages.activities.daycard :date="$day->get('date')" :activities="$day->get('activities')" wire:key="{{ $key }}" />
+    @endforeach
+  </div>
+  {{-- End Mobile version --}}
 </div>

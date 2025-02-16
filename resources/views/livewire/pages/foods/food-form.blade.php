@@ -15,14 +15,15 @@ new class extends Component {
     public string $fat;
     public string $carbs;
 
-
     public function rules(): array
     {
         $foodNameRules = ['required', 'string', 'max:255'];
         if ($this->food) {
-            $foodNameRules[] = Rule::unique('foods', 'name')->ignore($this->food->id)->where(function ($query) {
-                return $query->where('user_id', \Auth::id());
-            });
+            $foodNameRules[] = Rule::unique('foods', 'name')
+                ->ignore($this->food->id)
+                ->where(function ($query) {
+                    return $query->where('user_id', \Auth::id());
+                });
         } else {
             $foodNameRules[] = Rule::unique('foods', 'name')->where(function ($query) {
                 return $query->where('user_id', auth()->id());
@@ -38,20 +39,19 @@ new class extends Component {
         ];
     }
 
-    #[On('food-selected')]
-    public function chosen($f)
-    {
-        dd($f);
-    }
-
     public function submit(): void
     {
         $validated = $this->validate();
 
-        auth()->user()->foods()->create(array_merge($this->except(['foodName']), [
-            'name' => $this->foodName,
-            'created_by_admin' => auth()->user()->isAdmin()
-        ]));
+        auth()
+            ->user()
+            ->foods()
+            ->create(
+                array_merge($this->except(['foodName']), [
+                    'name' => $this->foodName,
+                    'created_by_admin' => auth()->user()->isAdmin(),
+                ]),
+            );
 
         $this->dispatch('show-toast', 'Еда добавлена');
         $this->dispatch('close-food-modal');
@@ -68,45 +68,29 @@ new class extends Component {
 
   <div class='flex flex-col gap-2'>
     <section>
-      <x-input-field
-        wire:model="foodName"
-        :errorMessages="$errors->get('foodName')"
-        label="{{ __('Food Name') }}"
-        placeholder="{{ __('type food name') }}"
-      />
+      <x-input-field wire:model="foodName" :errorMessages="$errors->get('foodName')" label="{{ __('Food Name') }}"
+        placeholder="{{ __('type food name') }}" />
     </section>
 
     <section class='flex justify-between gap-2'>
-      <x-input-field
-        wire:model="calories"
-        :errorMessages="$errors->get('calories')"
+      <x-input-field wire:model="calories" :errorMessages="$errors->get('calories')"
         label="{{ __('Calories per 100 gram') }}"
-        placeholder="{{ __('type calories per 100g') }}"
-      />
+        placeholder="{{ __('type calories per 100g') }}" />
 
-      <x-input-field
-        wire:model="protein"
-        :errorMessages="$errors->get('protein')"
+      <x-input-field wire:model="protein" :errorMessages="$errors->get('protein')"
         label="{{ __('Proteins per 100 gram') }}"
-        placeholder="{{ __('type proteins per 100g') }}"
-      />
+        placeholder="{{ __('type proteins per 100g') }}" />
 
     </section>
 
     <section class='flex justify-between gap-2'>
-      <x-input-field
-        wire:model="fat"
-        :errorMessages="$errors->get('fat')"
+      <x-input-field wire:model="fat" :errorMessages="$errors->get('fat')"
         label="{{ __('Fats per 100 gram') }}"
-        placeholder="{{ __('type fats per 100g') }}"
-      />
+        placeholder="{{ __('type fats per 100g') }}" />
 
-      <x-input-field
-        wire:model="carbs"
-        :errorMessages="$errors->get('carbs')"
+      <x-input-field wire:model="carbs" :errorMessages="$errors->get('carbs')"
         label="{{ __('Carbs per 100 gram') }}"
-        placeholder="{{ __('type carbs per 100g') }}"
-      />
+        placeholder="{{ __('type carbs per 100g') }}" />
 
 
     </section>

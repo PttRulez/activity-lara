@@ -14,25 +14,53 @@ new class extends Component {
         $this->redirect('/', navigate: true);
     }
 }; ?>
-<nav class='flex justify-between gap-10navbar border-b border-gray-700 items-center py-3'>
-  <div class='flex text-primary text-xl font-bold h-full gap-10 items-end'>
-    <a wire:navigate href='/' id='#logo' class='text-4xl font-bold'>
-      <i class="fa-solid fa-medal"></i>
-    </a>
-    <a wire:navigate href='/activities'>
-      Activities</a>
-    <a wire:navigate href='/foods'>
-      Food</a>
-  </div>
-  <div class="dropdown">
-    <div tabindex="0" role="button" class="btn m-1 bg-inherit text-2xl">{{ auth()->user()->email }}</div>
-    <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow text-2xl">
-      <li>
-        <a wire:navigate href='/profile'>Profile</a>
-      </li>
-      <li wire:click="logout">
-        <a>Logout</a>
-      </li>
-    </ul>
-  </div>
-</nav>
+<header>
+  <nav class="navbar text-primary ">
+    <div class="navbar-start gap-5 invisible md:visible">
+      <a wire:navigate href='/' id='#logo' class='text-4xl font-bold hover:bg'>
+        <i class="fa-solid fa-medal"></i>
+      </a>
+      <x-menu class="menu-horizontal text-2xl hidden lg:flex">
+        <x-menu-item title="{{ __('navbar.Diary') }}" link="{{ route('diaries') }}" />
+        <x-menu-item title="{{ __('navbar.Activities') }}" link="{{ route('activities') }}" />
+        <x-menu-item title="{{ __('navbar.Food') }}" link="{{ route('foods') }}" />
+      </x-menu>
+    </div>
+
+    <div class="navbar-center md:hidden">
+      <a wire:navigate href='/' id='#logo' class='text-4xl font-bold hover:bg'>
+        <i class="fa-solid fa-medal"></i>
+      </a>
+    </div>
+
+    <div class="navbar-end">
+      {{-- Desktop dropdown --}}
+      <x-dropdown label="{{ auth()->user()->name }}" class="text-2xl bg-base-100 hidden md:block" icon="o-user" right>
+        <x-menu class="text-neutral-content text-2xl">
+          <x-menu-item title="{{ __('navbar.Settings') }}" link="{{ route('settings') }}" />
+          <x-menu-item title="{{ __('navbar.Logout') }}" wire:click="logout" icon="c-arrow-left-start-on-rectangle"
+            class="text-neutral-content" />
+        </x-menu>
+      </x-dropdown>
+      {{-- End Desktop dropdown --}}
+
+      {{-- Mobile Dropdown --}}
+      <x-dropdown ight>
+        <x-slot:trigger class="md:hidden">
+          <x-button>
+            <x-heroicon-o-bars-3 class="h-12 w-12" />
+          </x-button>
+        </x-slot:trigger>
+        <x-menu class="text-neutral-content text-xl">
+          <x-menu-item title="{{ __('navbar.Diary') }}" link="{{ route('diaries') }}" />
+          <x-menu-item title="{{ __('navbar.Activities') }}" link="{{ route('activities') }}" />
+          <x-menu-item title="{{ __('navbar.Food') }}" link="{{ route('foods') }}" />
+          <x-menu-item title="{{ __('navbar.Settings') }}" link="{{ route('settings') }}" />
+          <x-menu-item title="{{ __('navbar.Logout') }}" wire:click="logout" icon="c-arrow-left-start-on-rectangle" />
+        </x-menu>
+      </x-dropdown>
+      {{-- End Mobile Dropdown --}}
+    </div>
+    </div>
+  </nav>
+</header>
