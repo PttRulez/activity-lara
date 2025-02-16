@@ -36,7 +36,7 @@ new class extends Component {
   </section>
 
 
-  <section>
+  <section class='mt-8'>
     @foreach ($days as $day)
       <div class='mb-8'>
         <p>
@@ -66,8 +66,9 @@ new class extends Component {
     @endforeach
   </section>
 
-  <dialog class="modal" :open="mealModalOpen" x-show="mealModalOpen">
-    <div class="modal-box overflow-auto lg:overflow-visible" @click.outside="mealModalOpen = false">
+
+  <dialog class="modal  overflow-auto" :open="mealModalOpen" x-show="mealModalOpen">
+    <div class="modal-box overflow-auto " @click.outside="mealModalOpen = false">
       <livewire:pages.foods.meal-form />
     </div>
   </dialog>

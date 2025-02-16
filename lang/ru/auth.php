@@ -12,6 +12,7 @@ return [
     | these language lines according to your application's requirements.
     |
     */
+    'confirm_password' => 'подтвердите пароль',
     'failed' => 'Неверные логин/пароль',
     'Forgot your password?' => 'Забыли пароль?',
     'login' => 'залогиниться',

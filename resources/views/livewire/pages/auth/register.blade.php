@@ -41,10 +41,12 @@ new #[Layout('layouts.guest')] #[Title('Register')] class extends Component {
   <div class='max-w-screen-sm w-full bg-base-300 py-10 px-16 rounded-xl'>
     <h1 class='text-center text-primary text-3xl mb-10'>{{ __('auth.Register') }}</h1>
     <form wire:submit="register" class="space-y-5">
-      <x-input wire:model="form.name" placeholder="{{ __('auth.type your name') }}" />
-      <x-input wire:model="form.email" placeholder="{{ __('auth.type your email') }}" />
-      <x-password wire:model="form.password" placeholder="{{ __('auth.type your password') }}" />
-      <x-password wire:model="form.password_confirmation" placeholder="{{ __('auth.confirm your password') }}" />
+      <x-input wire:model="name" placeholder="{{ __('name or nickname') }}" />
+      <x-input wire:model="email" placeholder="{{ __('auth.type your email') }}" />
+      <x-password wire:model="password"
+        placeholder="{{ __('auth.type your password') }}" />
+      <x-password wire:model="password_confirmation"
+        placeholder="{{ __('auth.confirm_password') }}" />
 
       <!-- Buttons -->
       <button type='submit' class='btn btn-primary w-full'>

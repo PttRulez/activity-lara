@@ -12,11 +12,10 @@ Route::middleware('auth')->group(function () {
     Volt::route('/foods', 'pages.foods.index')->name('foods');
 
     Route::get('/strava-callback', StravaCallbackController::class)->name('strava-callback');
-});
-Volt::route('/users', 'users.index');
 
-Route::view('/settings', 'pages.profile')
-    ->middleware(['auth'])
-    ->name('settings');
+    Route::view('/settings', 'pages.profile')->name('settings');
+});
+
+
 
 require __DIR__.'/auth.php';

@@ -29,7 +29,8 @@ new #[Layout('layouts.guest')] #[Title('Login')] class extends Component {
     <h1 class='text-center text-primary text-3xl mb-10'>{{ __('auth.Login') }}</h1>
     <form wire:submit="login" class="space-y-5">
       <x-input wire:model="form.email" placeholder="{{ __('auth.type your email') }}" />
-      <x-password wire:model="form.password" placeholder="{{ __('auth.type your password') }}" />
+      <x-password wire:model="form.password"
+        placeholder="{{ __('auth.type your password') }}" />
       <x-checkbox label="{{ __('auth.Remember me') }}" wire:model="form.remember" />
 
       <!-- Buttons -->

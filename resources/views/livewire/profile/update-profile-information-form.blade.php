@@ -65,34 +65,18 @@ new class extends Component {
     }
 }; ?>
 
-<section>
-  <header>
-    <h2 class="text-lg font-medium text-gray-900">
-      {{ __('Profile Information') }}
-    </h2>
+<x-card title="{{ __('pages/profile.information') }}" separator progress-indicator>
 
-    <p class="mt-1 text-sm text-gray-600">
-      {{ __('Here you can update info about your profile') }}
-    </p>
-  </header>
-
-  <form wire:submit="updateProfileInformation" class="mt-6 space-y-6">
-    <div>
-      <x-input-label for="name" :value="__('Name')" />
-      <x-text-input wire:model="name" id="name" name="name" type="text" class="mt-1 block w-full" required
-        autofocus autocomplete="name" />
-      <x-input-error class="mt-2" :messages="$errors->get('name')" />
-    </div>
-
-    <x-colorpicker wire:model="color1" />
+  <x-form wire:submit.prevent class="mt-6 space-y-6">
+    <x-input wire:model="name" placeholder="{{ __('auth.type your name') }}"
+      :label="__('name or nickname')" />
 
     <div>
-      <x-input-label for="email" :value="__('Email')" />
-      <x-text-input wire:model="email" id="email" name="email" type="email" class="mt-1 block w-full" required
-        autocomplete="username" />
-      <x-input-error class="mt-2" :messages="$errors->get('email')" />
+      <x-input wire:model="email" placeholder="{{ __('auth.type your email') }}"
+        :label="__('email')" />
 
-      @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && !auth()->user()->hasVerifiedEmail())
+      @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail &&
+              !auth()->user()->hasVerifiedEmail())
         <div>
           <p class="text-sm mt-2 text-gray-800">
             {{ __('Your email address is unverified.') }}
@@ -113,11 +97,8 @@ new class extends Component {
     </div>
 
     <div class="flex items-center gap-4">
-      <x-primary-button>{{ __('Save') }}</x-primary-button>
-
-      {{--            <x-action-message class="me-3" on="profile-updated"> --}}
-      {{--                {{ __('Saved.') }} --}}
-      {{--            </x-action-message> --}}
+      <x-button :label="__('Save')" class="btn-primary"
+        wire:click="updateProfileInformation" spinner="updateProfileInformation" />
     </div>
-  </form>
-</section>
+  </x-form>
+</x-card>

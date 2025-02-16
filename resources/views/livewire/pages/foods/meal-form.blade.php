@@ -87,22 +87,24 @@ new class extends Component {
         <div class='label'>
           <span class='label-text'>{{ __('Name') }}</span>
         </div>
-        <input class="input input-bordered w-full" type='text' wire:model="name" autoComplete='off' />
+        <input class="input input-bordered w-full" type='text' wire:model="name"
+          autoComplete='off' />
         <x-input-error :messages="$errors->get('name')" class="mt-2" />
       </label>
       <div class="flex-1 text-right" x-text="`${totalCalories} калорий`"></div>
     </section>
 
     <section>
-      <input type='date' class='input input-bordered w-full' autoComplete='off' x-model='date' />
+      <input type='date' class='input input-bordered w-full' autoComplete='off'
+        x-model='date' />
       <x-input-error :messages="$errors->get('date')" class="mt-2" />
     </section>
 
     <div class='label grid grid-cols-[3fr_1fr_1fr_1fr] gap-2 text-xs text-center'>
-      <span class='label-text'>Что ели?</span>
-      <span class='label-text'>вес</span>
-      <span class='label-text'>ккал/100</span>
-      <span class='label-text'>ккал</span>
+      <span class='label-text'>{{ __('pages/foods.mealform.whateat') }}</span>
+      <span class='label-text'>{{ __('pages/foods.mealform.weight') }}</span>
+      <span class='label-text'>{{ __('pages/foods.mealform.kcal_100') }}</span>
+      <span class='label-text'>{{ __('pages/foods.mealform.kcal') }}</span>
     </div>
 
     @foreach ($this->foods as $food)
@@ -110,13 +112,17 @@ new class extends Component {
         x-on:food-chosen="handleFoodChosen($event, {{ $loop->index }})"
         x-on:food-name-input="handleFoodNameInput($event, {{ $loop->index }})">
         <livewire:components.food-search :key="'food-search' . $loop->index" />
-        <input type='number' placeholder='0 г' class='input input-bordered w-full hide-number-arrows'
-          wire:model.number="foods.{{ $loop->index }}.weight" @keyup="handleFoodDataChanged({{ $loop->index }})" />
-        <input type='number' class='input input-bordered w-full'
+        <input type='number' placeholder='0 г'
+          class='input input-bordered w-full hide-number-arrows max-md:px-2'
+          wire:model.number="foods.{{ $loop->index }}.weight"
+          @keyup="handleFoodDataChanged({{ $loop->index }})" />
+        <input type='number'
+          class='input input-bordered w-full hide-number-arrows max-md:px-2'
           wire:model.number="foods.{{ $loop->index }}.calories_per_100"
           @keyup="handleFoodDataChanged({{ $loop->index }})" />
-        <input type='number' class='input input-bordered w-full' wire:model.number="foods.{{ $loop->index }}.calories"
-          disabled />
+        <input type='number'
+          class='input input-bordered w-full hide-number-arrows max-md:px-2'
+          wire:model.number="foods.{{ $loop->index }}.calories" disabled />
       </div>
       <x-input-error :messages="$errors->get('foods.' . $loop->index . '.name')" />
       <x-input-error :messages="$errors->get('foods.' . $loop->index . '.weight')" />
@@ -134,7 +140,8 @@ new class extends Component {
       <button type='submit' class='btn btn-primary'>
         {{ __('Save') }}
       </button>
-      <button id='btn' class='btn' @click.prevent="$dispatch('close-meal-modal')">
+      <button id='btn' class='btn'
+        @click.prevent="$dispatch('close-meal-modal')">
         {{ __('Cancel') }}
       </button>
     </div>

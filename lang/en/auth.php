@@ -13,6 +13,7 @@ return [
     |
     */
 
+    'confirm_password' => 'confirm your password',
     'failed' => 'These credentials do not match our records.',
     'Forgot your password?' => 'Forgot your password?',
     'login' => 'login',
@@ -24,6 +25,5 @@ return [
     'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
     'type your email' => 'type your email',
     'type your password' => 'type your password',
-    'confirm your password' => 'confirm your password',
     'type your name' => 'type your name',
 ];
