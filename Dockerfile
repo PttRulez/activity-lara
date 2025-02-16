@@ -26,7 +26,6 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
     && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 RUN php artisan storage:link
-RUN php artisan mary:install
 
 EXPOSE 9000
 
