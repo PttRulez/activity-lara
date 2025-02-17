@@ -14,6 +14,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v3
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -53,10 +56,10 @@ jobs:
 
           #   Create directory of our project if it doesn't exist
           ssh -o StrictHostKeyChecking=no ${{ secrets.ACTIVITY_SERVER_USER }}@${{ secrets.ACTIVITY_SERVER_IP }} "mkdir -p $REMOTE_DIR"
-          
+
           #   Transfer docker images, docker-compose.yml nginx.conf files
           scp -o StrictHostKeyChecking=no activity-image.tar docker-compose.yml nginx.conf ${{ secrets.ACTIVITY_SERVER_USER }}@${{ secrets.ACTIVITY_SERVER_IP }}:$REMOTE_DIR
-          
+
           #   Transfer build files (JS and CSS, favicon, vite manifest)
           scp -o StrictHostKeyChecking=no -r ./public/build/* ${{ secrets.ACTIVITY_SERVER_USER }}@${{ secrets.ACTIVITY_SERVER_IP }}:$REMOTE_DIR/build/
 
