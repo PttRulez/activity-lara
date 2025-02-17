@@ -28,7 +28,7 @@ new class extends Component {
     </button>
   </section>
   <section class='mt-14 md:block'>
-    @foreach ($weeks as $week)
+    @foreach ($weeks as $weekIndex => $week)
       <div class='flex max-md:flex-col-reverse gap-3'>
         <ul
           class='timeline max-md:timeline-vertical max-md:flex-col-reverse justify-between w-full mb-10 md:mb-20 flex-auto'>
@@ -46,7 +46,8 @@ new class extends Component {
                 {{ $day['caloriesBalance'] }}
               </div>
               <div class='timeline-middle tooltip' data-tip={{ $day['date'] }}>
-                <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor' class='h-5 w-5 '>
+                <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'
+                  fill='currentColor' class='h-5 w-5 '>
                   <path fillRule='evenodd'
                     d='M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z'
                     clipRule='evenodd' />
@@ -64,8 +65,12 @@ new class extends Component {
         <div class='text-center'>
           <div @class([
               'stat-value' => true,
-              //              "text-green-500" => $week['weight'] - $weeks[$index + 1]['weight'] <= 0.2,
-              //              "text-red-500" => $week['weight'] - $weeks[$index + 1]['weight'] > 0.2,
+              'text-green-500' =>
+                  $weekIndex < count($weeks) - 1 &&
+                  $week['weight'] - $weeks[$weekIndex + 1]['weight'] <= 0.2,
+              'text-red-500' =>
+                  $weekIndex < count($weeks) - 1 &&
+                  $week['weight'] - $weeks[$weekIndex + 1]['weight'] > 0.2,
           ])>
             @isset($week['weight'])
               {{ $week['weight'] }}
