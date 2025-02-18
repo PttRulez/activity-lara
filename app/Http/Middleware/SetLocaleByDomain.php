@@ -16,8 +16,6 @@ class SetLocaleByDomain
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $host = $request->getHost();
-
         if ($request->getHost() === config('app.url')) {
             App::setLocale('ru');
         }
