@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        
+
       - name: Install Composer dependencies
         uses: ramsey/composer-install@v3
 
@@ -31,9 +31,9 @@ jobs:
         run: |
           npm run build  # Build your CSS, JS, and other assets
 
-      - name: Create .env file from GitHub Secrets
-        run: |
-          echo "${{ secrets.ENV_FILE }}" > .env.docker
+      # - name: Create .env file from GitHub Secrets
+      #   run: |
+      #     echo "${{ secrets.ENV_FILE }}" > .env.docker
 
       - name: Build Docker Compose images
         run: docker compose -f docker-compose.yml build
