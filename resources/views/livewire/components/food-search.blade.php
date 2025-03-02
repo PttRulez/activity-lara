@@ -24,14 +24,16 @@ new class extends Component {
 }; ?>
 
 
-<div x-data="foodsearch" :class="{
-    'dropdown': true,
-    'dropdown-open': results?.length > 0
-}">
-  <input type="text" class="input input-bordered w-full  max-md:px-2" autoComplete='off' wire:model.live.debounce.400ms="foodName"
-    tabIndex="0">
-  <ul class='dropdown-content menu  bg-base-200 flex-col rounded-md w-full z-10' wire:transition.opacity
-    wire:transition.duration.300 tabindex="0" x-show="results?.length > 0">
+<div x-data="foodsearch"
+  :class="{
+      'dropdown': true,
+      'dropdown-open': results?.length > 0
+  }">
+  <input type="text" class="input input-bordered w-full  max-md:px-2" autoComplete='off'
+    wire:model.live.debounce.400ms="foodName" tabIndex="0">
+  <ul class='dropdown-content menu  bg-base-200 flex-col rounded-md w-full z-10'
+    wire:transition.opacity wire:transition.duration.300 tabindex="0"
+    x-show="results?.length > 0" @click.outside="results = []">
     <template x-for="(food, index) in results">
       <li :key="food.name + index" tabindex="0" @click="handleChooseFood(food)"
         class='border-b border-b-base-content/10 w-full cursor-pointer'>

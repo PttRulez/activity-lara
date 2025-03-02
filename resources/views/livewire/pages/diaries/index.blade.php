@@ -29,11 +29,11 @@ new class extends Component {
   </section>
   <section class='mt-14 md:block'>
     @foreach ($weeks as $weekIndex => $week)
-      <div class='flex max-md:flex-col-reverse gap-3'>
+      <div class='flex max-md:flex-col-reverse gap-3' wire:key="week-{{ $weekIndex }}">
         <ul
           class='timeline max-md:timeline-vertical max-md:flex-col-reverse justify-between w-full mb-10 md:mb-20 flex-auto'>
           @foreach ($week['days'] as $index => $day)
-            <li class='grow' key={date}>
+            <li class='grow' wire:key="day-{{ $day['date'] }}">
               @if ($index > 0)
                 <hr class='grow' />
               @endif

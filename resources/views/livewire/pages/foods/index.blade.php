@@ -1,10 +1,18 @@
 <?php
 
 use Livewire\Volt\Component;
+use Livewire\Attributes\On;
 
 new class extends Component {
     public iterable $days = [];
     public bool $foodModalOpen = false;
+
+    #[On('meal-added')]
+    public function mealAdded()
+    {
+        $this->mount();
+        $this->render();
+    }
 
     public function mount(): void
     {
@@ -55,7 +63,8 @@ new class extends Component {
             <div class='collapse-content'>
               @foreach ($meal->foods as $food)
                 <div class='text-sm'>
-                  {{ $food->name }} - {{ $food->weight }} {{ __('g') }} - {{ $food->calories }}
+                  {{ $food->name }} - {{ $food->weight }} {{ __('g') }} -
+                  {{ $food->calories }}
                   {{ __('pages/foods.calories') }}
                 </div>
               @endforeach
@@ -67,14 +76,19 @@ new class extends Component {
   </section>
 
 
-  <dialog class="modal  overflow-auto" :open="mealModalOpen" x-show="mealModalOpen">
-    <div class="modal-box overflow-auto " @click.outside="mealModalOpen = false">
+  <dialog
+    :class="{
+        'modal max-md:!bg-black overflow-auto': true,
+        'modal-open': mealModalOpen
+    }"
+    x-show="mealModalOpen">
+    <div class="modal-box overflow-auto " @mousedown.outside="mealModalOpen = false">
       <livewire:pages.foods.meal-form />
     </div>
   </dialog>
 
   <dialog class="modal" :open="foodModalOpen" x-show="foodModalOpen">
-    <div class="modal-box" @click.outside="foodModalOpen = false">
+    <div class="modal-box" @mousedown.outside="foodModalOpen = false">
       <livewire:pages.foods.food-form />
     </div>
   </dialog>

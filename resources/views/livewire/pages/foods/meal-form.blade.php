@@ -73,7 +73,10 @@ new class extends Component {
             FoodInMeal::insert($foodsInMeal);
         });
 
-        redirect()->route('foods');
+        // $this->date = Carbon::now()->toDateString();
+        // $this->foods = [];
+        // $this->dispatch('close-meal-modal');
+        // $this->dispatch('meal-added');
     }
 }; ?>
 
@@ -133,7 +136,7 @@ new class extends Component {
   <x-input-error :messages="$errors->get('foods')" />
 
   <div class='flex justify-between gap-3 pt-5'>
-    <div class='ml-1 cursor-pointer' wire:click="add">
+    <div class='btn  btn-outline ml-1 cursor-pointer' wire:click="add">
       +
     </div>
     <div>
@@ -161,14 +164,6 @@ new class extends Component {
         let c = this.foods.reduce((acc, item) => acc + item.calories, 0);
         this.calories = c;
         return c;
-      },
-      addFood() {
-        this.foods.push({
-          'calories': 0,
-          'calories_per_100': 0,
-          'name': '',
-          'weight': 0
-        });
       },
 
       //                                    HANDLERS
