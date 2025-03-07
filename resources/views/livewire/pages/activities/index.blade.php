@@ -9,10 +9,12 @@ use Livewire\Attributes\Url;
 
 new #[Title('Activities')] class extends Component {
     public string $stravaOAuthLink;
+    public iterable $days;
 
     public function mount(Strava $strava)
     {
         $this->stravaOAuthLink = $strava->getStravaOauthLink();
+        $this->getDays();
     }
     #[Url]
     public $month = null;
@@ -64,8 +66,7 @@ new #[Title('Activities')] class extends Component {
         return $this->currentDate->copy()->endOfMonth()->endOfWeek();
     }
 
-    #[Computed]
-    public function days(): Collection
+    public function getDays(): void
     {
         $allDates = collect();
         $activities = auth()
@@ -82,7 +83,7 @@ new #[Title('Activities')] class extends Component {
             $allDates->put($this->currentDate->format('d.m'), $data);
         }
 
-        return $allDates;
+        $this->days = $allDates;
     }
 
     #[On('get-calories')]
@@ -94,12 +95,13 @@ new #[Title('Activities')] class extends Component {
     public function syncStrava(Strava $strava): void
     {
         $strava->syncStrava();
+        $this->getDays();
     }
 }; ?>
 
 <div>
-
-  <div class='p-4 text-3xl flex max-md:flex-col-reverse max-md:gap-5 items-center justify-between'>
+  <div
+    class='p-4 text-3xl flex max-md:flex-col-reverse max-md:gap-5 items-center justify-between'>
     <div class='min-w-56 flex justify-between'>
       <a href="{{ $this->prevButtonLink }}" wire:navigate>
         <i class='fa-solid fa-arrow-left cursor-pointer w-8 h-8'></i>
@@ -126,8 +128,9 @@ new #[Title('Activities')] class extends Component {
   </div>
   {{-- Desktop version --}}
   <div class='grid grid-cols-7 gap-4 max-md:hidden'>
-    @foreach ($this->days as $key => $day)
-      <livewire:pages.activities.daycard :date="$day->get('date')" :activities="$day->get('activities')" wire:key="{{ $key }}" />
+    @foreach ($this->days as $date => $day)
+      <livewire:pages.activities.daycard :date="$day->get('date')" :activities="$day->get('activities')"
+        wire:key="{{ $date . Str::random(16) }}" />
     @endforeach
   </div>
   {{-- End Desktop version --}}
@@ -135,7 +138,8 @@ new #[Title('Activities')] class extends Component {
   {{-- Mobile version --}}
   <div class='flex flex-col-reverse gap-5 md:hidden'>
     @foreach ($this->days as $key => $day)
-      <livewire:pages.activities.daycard :date="$day->get('date')" :activities="$day->get('activities')" wire:key="{{ $key }}" />
+      <livewire:pages.activities.daycard :date="$day->get('date')" :activities="$day->get('activities')"
+        wire:key="{{ $key . Str::random(16) }}" />
     @endforeach
   </div>
   {{-- End Mobile version --}}
