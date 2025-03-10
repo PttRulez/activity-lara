@@ -90,6 +90,7 @@ new #[Title('Activities')] class extends Component {
     public function getCaloriesForActivity($id, Strava $strava): void
     {
         $strava->updateActivityWithCalories($id);
+        $this->getDays();
     }
 
     public function syncStrava(Strava $strava): void

@@ -1,11 +1,9 @@
 <?php
 
-use Illuminate\Support\Collection;
 use Livewire\Volt\Component;
 use App\Models\Meal;
 use App\Models\FoodInMeal;
 use Carbon\Carbon;
-use Livewire\Attributes\Computed;
 
 const EMPTY_FOOD = ['calories' => 0, 'calories_per_100' => 0, 'name' => '', 'weight' => 0];
 
@@ -73,6 +71,11 @@ new class extends Component {
             FoodInMeal::insert($foodsInMeal);
         });
 
+        $this->foods = [];
+        $this->calories = 0;
+        $this->name = 'Обед';
+        $this->date = Carbon::now()->toDateString();
+
         $this->dispatch('close-meal-modal');
         $this->dispatch('meal-added');
     }
@@ -108,29 +111,33 @@ new class extends Component {
       <span class='label-text'>{{ __('pages/foods.mealform.kcal') }}</span>
     </div>
 
-    @foreach ($this->foods as $food)
-      <div wire:key="{{ 'foodsearch-form' . $loop->index }}">
-        <div class="grid grid-cols-[3fr_1fr_1fr_1fr] gap-2 mb-2"
-          x-on:food-chosen="handleFoodChosen($event, {{ $loop->index }})"
-          x-on:food-name-input="handleFoodNameInput($event, {{ $loop->index }})">
-          <livewire:components.food-search wire:key="{{ 'foodsearch' . $loop->index }}" />
-          <input type='number' placeholder='0 г'
-            class='input input-bordered w-full hide-number-arrows max-md:px-2'
-            wire:model.number="foods.{{ $loop->index }}.weight"
-            @keyup="handleFoodDataChanged({{ $loop->index }})" />
-          <input type='number'
-            class='input input-bordered w-full hide-number-arrows max-md:px-2'
-            wire:model.number="foods.{{ $loop->index }}.calories_per_100"
-            @keyup="handleFoodDataChanged({{ $loop->index }})" />
-          <input type='number'
-            class='input input-bordered w-full hide-number-arrows max-md:px-2'
-            wire:model.number="foods.{{ $loop->index }}.calories" disabled />
+    @if (count($this->foods) > 0)
+      @foreach ($this->foods as $index => $food)
+        <div wire:key="{{ 'foodsearch-form' . $index . Str::random(16) }}">
+          <div class="grid grid-cols-[3fr_1fr_1fr_1fr] gap-2 mb-2"
+            x-on:food-chosen="handleFoodChosen($event, {{ $index }})"
+            x-on:food-name-input="handleFoodNameInput($event, {{ $index }})">
+            <livewire:components.food-search
+              wire:key="{{ 'foodsearch' . $index . Str::random(16) }}"
+              wire:model="foods.{{ $index }}.name" />
+            <input type='number' placeholder='0 г'
+              class='input input-bordered w-full hide-number-arrows max-md:px-2'
+              wire:model.number="foods.{{ $index }}.weight"
+              @keyup="handleFoodDataChanged({{ $index }})" />
+            <input type='number'
+              class='input input-bordered w-full hide-number-arrows max-md:px-2'
+              wire:model.number="foods.{{ $index }}.calories_per_100"
+              @keyup="handleFoodDataChanged({{ $index }})" />
+            <input type='number'
+              class='input input-bordered w-full hide-number-arrows max-md:px-2'
+              wire:model.number="foods.{{ $index }}.calories" disabled />
+          </div>
+          <x-input-error :messages="$errors->get('foods.' . $index . '.name')" />
+          <x-input-error :messages="$errors->get('foods.' . $index . '.weight')" />
+          <x-input-error :messages="$errors->get('foods.' . $index . '.calories_per_100')" />
         </div>
-        <x-input-error :messages="$errors->get('foods.' . $loop->index . '.name')" />
-        <x-input-error :messages="$errors->get('foods.' . $loop->index . '.weight')" />
-        <x-input-error :messages="$errors->get('foods.' . $loop->index . '.calories_per_100')" />
-      </div>
-    @endforeach
+      @endforeach
+    @endif
   </div>
 
   <x-input-error :messages="$errors->get('foods')" />

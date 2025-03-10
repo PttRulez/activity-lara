@@ -11,10 +11,11 @@
   <div class='label'>
     <span class='label-text'>{{ $label }}</span>
   </div>
-  <input class="input input-bordered w-full" type='{{ $type }}'
+  <input {{ $attributes->whereStartsWith('wire:model') }}
+    class="input input-bordered w-full" type='{{ $type }}'
     @isset($step)
      step="{{ $step }}"
-   @endif autoComplete='{{ $autoComplete }}'
-    @required($required) />
+   @endif
+    autoComplete='{{ $autoComplete }}' @required($required) />
   <x-input-error :messages="$errorMessages" class="mt-2" />
 </label>

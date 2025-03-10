@@ -4,9 +4,12 @@ use Livewire\Volt\Component;
 use App\Models\Food;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Modelable;
 
 new class extends Component {
+    #[Modelable]
     public string $foodName;
+    
     public iterable $results = [];
 
     public function updatedFoodName($value): void
@@ -29,7 +32,7 @@ new class extends Component {
       'dropdown': true,
       'dropdown-open': results?.length > 0
   }">
-  <input type="text" class="input input-bordered w-full  max-md:px-2" autoComplete='off'
+  <input  type="text" class="input input-bordered w-full  max-md:px-2" autoComplete='off'
     wire:model.live.debounce.400ms="foodName" tabIndex="0">
   <ul class='dropdown-content menu  bg-base-200 flex-col rounded-md w-full z-10'
     wire:transition.opacity wire:transition.duration.300 tabindex="0"

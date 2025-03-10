@@ -1,10 +1,8 @@
 <?php
 
 use Livewire\Volt\Component;
-use Livewire\Attributes\Validate;
 use Illuminate\Validation\Rule;
 use App\Models\Food;
-use Livewire\Attributes\On;
 
 new class extends Component {
     public ?Food $food = null;
@@ -53,6 +51,7 @@ new class extends Component {
                 ]),
             );
 
+        $this->reset();
         $this->dispatch('show-toast', 'Еда добавлена');
         $this->dispatch('close-food-modal');
     }
@@ -68,6 +67,7 @@ new class extends Component {
 
   <div class='flex flex-col gap-2'>
     <section>
+      <input wire:model="foodName" />
       <x-input-field wire:model="foodName" :errorMessages="$errors->get('foodName')" label="{{ __('Food Name') }}"
         placeholder="{{ __('type food name') }}" />
     </section>
