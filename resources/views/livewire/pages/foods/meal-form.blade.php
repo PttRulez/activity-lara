@@ -111,33 +111,31 @@ new class extends Component {
       <span class='label-text'>{{ __('pages/foods.mealform.kcal') }}</span>
     </div>
 
-    @if (count($this->foods) > 0)
-      @foreach ($this->foods as $index => $food)
-        <div wire:key="{{ 'foodsearch-form' . $index . Str::random(16) }}">
-          <div class="grid grid-cols-[3fr_1fr_1fr_1fr] gap-2 mb-2"
-            x-on:food-chosen="handleFoodChosen($event, {{ $index }})"
-            x-on:food-name-input="handleFoodNameInput($event, {{ $index }})">
-            <livewire:components.food-search
-              wire:key="{{ 'foodsearch' . $index . Str::random(16) }}"
-              wire:model="foods.{{ $index }}.name" />
-            <input type='number' placeholder='0 г'
-              class='input input-bordered w-full hide-number-arrows max-md:px-2'
-              wire:model.number="foods.{{ $index }}.weight"
-              @keyup="handleFoodDataChanged({{ $index }})" />
-            <input type='number'
-              class='input input-bordered w-full hide-number-arrows max-md:px-2'
-              wire:model.number="foods.{{ $index }}.calories_per_100"
-              @keyup="handleFoodDataChanged({{ $index }})" />
-            <input type='number'
-              class='input input-bordered w-full hide-number-arrows max-md:px-2'
-              wire:model.number="foods.{{ $index }}.calories" disabled />
-          </div>
-          <x-input-error :messages="$errors->get('foods.' . $index . '.name')" />
-          <x-input-error :messages="$errors->get('foods.' . $index . '.weight')" />
-          <x-input-error :messages="$errors->get('foods.' . $index . '.calories_per_100')" />
+    @foreach ($this->foods as $index => $food)
+      <div wire:key="{{ 'foodsearch-form' . $index . Str::random(16) }}">
+        <div class="grid grid-cols-[3fr_1fr_1fr_1fr] gap-2 mb-2"
+          x-on:food-chosen="handleFoodChosen($event, {{ $index }})"
+          x-on:food-name-input="handleFoodNameInput($event, {{ $index }})">
+          <livewire:components.food-search
+            wire:key="{{ 'foodsearch' . $index . Str::random(16) }}"
+            wire:model="foods.{{ $index }}.name" />
+          <input type='number' placeholder='0 г'
+            class='input input-bordered w-full hide-number-arrows max-md:px-2'
+            wire:model.number="foods.{{ $index }}.weight"
+            @keyup="handleFoodDataChanged({{ $index }})" />
+          <input type='number'
+            class='input input-bordered w-full hide-number-arrows max-md:px-2'
+            wire:model.number="foods.{{ $index }}.calories_per_100"
+            @keyup="handleFoodDataChanged({{ $index }})" />
+          <input type='number'
+            class='input input-bordered w-full hide-number-arrows max-md:px-2'
+            wire:model.number="foods.{{ $index }}.calories" disabled />
         </div>
-      @endforeach
-    @endif
+        <x-input-error :messages="$errors->get('foods.' . $index . '.name')" />
+        <x-input-error :messages="$errors->get('foods.' . $index . '.weight')" />
+        <x-input-error :messages="$errors->get('foods.' . $index . '.calories_per_100')" />
+      </div>
+    @endforeach
   </div>
 
   <x-input-error :messages="$errors->get('foods')" />

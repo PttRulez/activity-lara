@@ -67,7 +67,6 @@ new class extends Component {
 
   <div class='flex flex-col gap-2'>
     <section>
-      <input wire:model="foodName" />
       <x-input-field wire:model="foodName" :errorMessages="$errors->get('foodName')" label="{{ __('Food Name') }}"
         placeholder="{{ __('type food name') }}" />
     </section>
