@@ -45,8 +45,8 @@ new class extends Component {
 
 
   <section class='mt-8'>
-    @foreach ($days as $day)
-      <div class='mb-8'>
+    @foreach ($days as $dayIndex => $day)
+      <div class='mb-8' wire:key="{{ $dayIndex . 'foodday' }}">
         <p>
           {{ $day['date']->translatedFormat('j F') }} -
           <span>{{ $day['meals']->reduce(fn($acc, $meal) => $meal->calories + $acc, 0) }}</span>
@@ -54,8 +54,9 @@ new class extends Component {
 
         <div class='divider'></div>
 
-        @foreach ($day['meals'] as $meal)
-          <div class='collapse bg-base-200 mb-4'>
+        @foreach ($day['meals'] as $index => $meal)
+          <div class='collapse bg-base-200 mb-4'
+            wire:key="{{ $index . 'food-in-day' . $dayIndex }}">
             <input type='checkbox' />
             <div class='collapse-title  font-medium'>
               {{ $meal->name . ' - ' . $meal->calories }}

@@ -14,7 +14,6 @@ class DiariesController extends Controller
         $before = $now->copy()->endOfWeek();
         $after = $now->copy()->subWeeks(3)->startOfWeek();
         $weeks = $diaryService->getDiaries($after, $before);
-        
         return view('pages.diaries', [
             'weeks' => $weeks,
         ]);
