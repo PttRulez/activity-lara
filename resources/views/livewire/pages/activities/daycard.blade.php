@@ -14,7 +14,7 @@ new class extends Component {
     #[Reactive]
     public ?Collection $activities;
     public Carbon $date;
-    public string $text = "Vasya";
+    public string $text = 'Vasya';
 
     /**
      * @param Collection<int, Activity> $activities
@@ -27,7 +27,9 @@ new class extends Component {
 
     public function getCalories(int $sourceId, ?int $calories = null)
     {
-        if ($calories > 0) return;
+        if ($calories > 0) {
+            return;
+        }
         $this->dispatch('get-calories', $sourceId);
     }
 }; ?>
@@ -36,46 +38,50 @@ new class extends Component {
   <div class='card-body'>
     @if (!$activities || count($activities) === 0)
       <div class='flex'>
-        <p>{{ $date->isoFormat("DD.MM") }}</p>
+        <p>{{ $date->isoFormat('DD.MM') }}</p>
       </div>
-
     @elseif(count($activities) === 1)
       <div class='flex'>
-        <p>{{ $date->isoFormat("DD.MM") }}</p>
-        <x-sport-icon
-          :calories="$activities[0]->calories"
-          sportType="{{ $activities[0]->sport_type }}"
-          wire:click="getCalories({{ $activities[0]->source_id }}, {{ $activities[0]->calories }})"
-        />
+        <p>{{ $date->isoFormat('DD.MM') }}</p>
+        @if (isset($a->calories))
+          <x-sport-icon :calories="$activities[0]->calories" sportType="{{ $activities[0]->sport_type }}" />
+        @else
+          <x-sport-icon :calories="$activities[0]->calories" sportType="{{ $activities[0]->sport_type }}"
+            wire:click="getCalories({{ $activities[0]->source_id }}, {{ $activities[0]->calories }})" />
+        @endif
       </div>
 
-      <h2 class='card-title text-ellipsis whitespace-nowrap overflow-hidden inline-block max-w-full'>
+      <h2
+        class='card-title text-ellipsis whitespace-nowrap overflow-hidden inline-block max-w-full'>
         {{ $activities[0]->name }}
       </h2>
-      @if($activities[0]->distance > 0)
+      @if ($activities[0]->distance > 0)
         <div class='flex justify-between'>
           <span>{{ round($activities[0]->distance / 1000, 2) }} km</span>
           <span>{{ $activities[0]->pace_string }}</span>
         </div>
       @endif
       @isset($activities[0]->calories)
-        <span>{{ $activities[0]->calories . " " .  __('kcal') }}</span>
+        <span>{{ $activities[0]->calories . ' ' . __('kcal') }}</span>
       @endisset
-
     @elseif(count($activities) > 1)
-      <p>{{ $date->isoFormat("DD.MM") }}</p>
-      @foreach($activities as $a)
+      <p>{{ $date->isoFormat('DD.MM') }}</p>
+      @foreach ($activities as $a)
         <div>
           <div class="flex justify-between">
-            <x-sport-icon
-              calories="{{ $a->calories }}"
-              sportType="{{ $a->sport_type }}"
-              wire:click="getCalories({{ $a->source_id }}, {{  $activities[0]->calories }})"
-            />
-            <span>{{ $a->calories }} kcal</span>
+            @if (isset($a->calories))
+              <x-sport-icon :calories="$a->calories" sportType="{{ $a->sport_type }}" />
+            @else
+              <x-sport-icon :calories="$a->calories" sportType="{{ $a->sport_type }}"
+                wire:click="getCalories({{ $a->source_id }}, {{ $a->calories }})" />
+            @endif
+
+            @isset($a->calories)
+              <span>{{ $a->calories . ' ' . __('kcal') }}</span>
+            @endisset
           </div>
         </div>
-        @if($a->distance > 0)
+        @if ($a->distance > 0)
           <div class='flex justify-between'>
             <span>{{ round($a->distance / 1000, 2) }} km</span>
             <span>{{ $a->pace_string }}</span>
@@ -86,4 +92,3 @@ new class extends Component {
 
   </div>
 </div>
-
