@@ -28,7 +28,7 @@ new #[Title('Activities')] class extends Component {
         if (!$this->year || !$this->month) {
             return now();
         } else {
-            return Carbon::create($this->year, $this->month, 2);
+            return Carbon::create($this->year, $this->month);
         }
     }
 
@@ -75,12 +75,14 @@ new #[Title('Activities')] class extends Component {
             ->whereBetween('date', [$this->after, $this->before])
             ->get();
 
-        for ($this->currentDate = $this->after->copy(); $this->currentDate <= $this->before; $this->currentDate->addDay()) {
+        $curDate = $this->after->copy();
+
+        for ($curDate; $curDate <= $this->before; $curDate->addDay()) {
             $data = collect([
-                'date' => $this->currentDate->copy(),
-                'activities' => $activities->filter(fn($a) => $this->currentDate->isSameDay($a->date))->values(),
+                'date' => $curDate->copy(),
+                'activities' => $activities->filter(fn($a) => $curDate->isSameDay($a->date))->values(),
             ]);
-            $allDates->put($this->currentDate->format('d.m'), $data);
+            $allDates->put($curDate->format('d.m'), $data);
         }
 
         $this->days = $allDates;
